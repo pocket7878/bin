@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+indent = 4
+
+if ARGV.size == 1
+  indent = ARGV[0].to_i
+end
+
+while l = STDIN.gets
+  puts "#{' ' * indent}#{l}"
+end

@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+comstr = "//"
+
+if ARGV.size == 1
+  comstr = ARGV[0].to_s
+end
+
+while l = STDIN.gets
+  puts "#{comstr}#{l}"
+end

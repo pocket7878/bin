@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+if ARGV.size < 1
+  puts "github-download github-folder-page-url"
+  exit 1
+end
+
+url = ARGV[0]
+
+if /https:\/\/github.com\/(.+)\/(.+)\/tree\/(.+)\/(.+)/.match(url)
+  user_name = $1
+  repo_name = $2
+  branch_name = $3
+  file = $4
+  system("svn export https://github.com/#{user_name}/#{repo_name}/branches/#{branch_name}/#{file}")
+else
+  puts "This is not github url"
+end
