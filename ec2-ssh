@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+require 'json'
+
+env_list_file = File.expand_path("~/.ec2-env.json")
+
+unless FileTest.exists?(env_list_file)
+  STDERR.puts "Error: ~/.ec2-env.json not exists."
+  exit(1)
+end
+
+if ARGV.count != 3
+  STDERR.puts "#{__FILE__} allow|deny <env-name> <ip-addr>"
+  exit(1)
+else
+  command = ARGV[0]
+  environment = ARGV[1]
+  ip = ARGV[2]
+
+  if command == "allow"
+    command = "authorize-security-group-ingress"
+  elsif command == "deny"
+    command = "revoke-security-group-ingress"
+  end
+
+  file = File.read(env_list_file)
+  env_list = JSON.parse(file)
+  env = env_list.find { |ev| ev["name"] == environment }
+
+  unless env 
+    STDERR.puts "#{environment} not found."
+    exit(1)
+  end
+
+  system("aws ec2 #{command} --group-id #{env["security-group"]} --protocol tcp --port 22 --cidr #{ip}/32")
+end
+
